@@ -11,6 +11,8 @@ This public repo holds the Template Marketplace redesign so template reviewers c
 
 Without Source: `npm ci --workspaces=false`, then `npm run dev`. Node 22.12 or later is required.
 
+This copy refreshes from the source branch each day (`review/sync.mjs`, run by `.github/workflows/sync.yml`). Do not edit copied files here; a refresh overwrites them.
+
 Fonts are not in this repo. The CSS loads them from Webflow's CDN, so the preview needs a network connection. Template demo iframes do not load on localhost; see "Local preview restriction" below.
 
 The sections below are the original project notes. Where they say "this package" or "the monorepo", they refer to the source of this copy.

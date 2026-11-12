@@ -1,0 +1,53 @@
+name: Refresh review copy
+
+on:
+  schedule:
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: sync
+
+env:
+  SOURCE_REPO: https://github.com/createsomethingtoday/create-something-monorepo.git
+  SOURCE_BRANCH: codex/cre-2050-marketplace-source
+  SOURCE_PATH: packages/webflow-marketplace-source
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch the source package
+        run: |
+          git clone --quiet --depth 1 --filter=blob:none --sparse --branch "$SOURCE_BRANCH" "$SOURCE_REPO" "$RUNNER_TEMP/source"
+          git -C "$RUNNER_TEMP/source" sparse-checkout set "$SOURCE_PATH"
+          echo "SOURCE_SHA=$(git -C "$RUNNER_TEMP/source" rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Refresh
+        run: node review/sync.mjs "$RUNNER_TEMP/source/$SOURCE_PATH" "$SOURCE_SHA"
+      - name: Verify
+        run: |
+          if find . -path ./node_modules -prune -o -type f \( -iname '*.woff' -o -iname '*.woff2' -o -iname '*.otf' -o -iname '*.ttf' -o -iname '*.eot' \) -print | grep -q .; then
+            echo "Font files found. This repo must not contain font files." >&2
+            exit 1
+          fi
+          npm ci --workspaces=false
+          npm test
+          npm run build
+      - name: Commit
+        run: |
+          git add -A
+          if git diff --cached --quiet -- . ':(exclude)review/SOURCE'; then
+            echo "No change in the source package."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet -m "Refresh from ${SOURCE_BRANCH}@${SOURCE_SHA::9}"
+          git push --quiet

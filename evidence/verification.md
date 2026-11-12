@@ -35,7 +35,7 @@ Worktree disposition: retained at `/private/tmp/cre-2050-marketplace-source` / `
 
 ## Hosted attempt and current gate
 
-Source provisioned site `6ab1b3e0f9ea871c3fee6010`, app `477da3e6-4ef7-4d60-9256-d644f30fb856`, environment `27cebcb2-00f5-418b-a526-f2c216ceeef1` in workspace `63e421146216743f3c52476a`. Initial deployment `79f5a2ca-8797-417d-9194-be76088517b3` failed. After upgrading to Astro 6.4.8 and making the upload self-contained, deployment `60d2a0e2-d483-4901-99ab-90dda2b0ee52` also failed. Root cause is unconfirmed; Source only reports failure and directs the user to Webflow build logs. IAB Webflow dashboard redirects to login and displays Access to this page has been denied. User sign-in requested; no third blind deployment attempted.
+Source provisioned site `<id>`, app `<id>`, environment `<id>` in workspace `<id>`. Initial deployment `<id>` failed. After upgrading to Astro 6.4.8 and making the upload self-contained, deployment `<id>` also failed. Root cause is unconfirmed; Source only reports failure and directs the user to Webflow build logs. IAB Webflow dashboard redirects to login and displays Access to this page has been denied. User sign-in requested; no third blind deployment attempted.
 
 Review: https://github.com/createsomethingtoday/create-something-monorepo/pull/1740 (draft). Local/build receipts passed again after the upgrade. Goal remains active and CRE-2050 remains open pending hosted verification; do not equate local success with completed migration.
 
